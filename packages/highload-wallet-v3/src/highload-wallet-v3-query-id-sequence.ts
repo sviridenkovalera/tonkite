@@ -49,12 +49,11 @@ export class HighloadWalletV3QueryIdSequence {
     );
   }
 
-  static restore(queryId: number): HighloadWalletV3QueryIdSequence {
-    const shift = queryId >> HighloadWalletV3QueryIdSequence.BIT_NUMBER_SIZE;
-    const bitNumber = queryId & HighloadWalletV3QueryIdSequence.BIT_NUMBER_MASK;
-
+  static restore(queryId: number) {
+    const shift = (queryId / BIT_NUMBER_MASK) | 0; // const shift = Math.floor(queryId / 1023)
+    const bitNumber = queryId - shift * BIT_NUMBER_MASK; // const bitNumber = queryId % 1023
     return new HighloadWalletV3QueryIdSequence(shift, bitNumber);
-  }
+}
 
   current() {
     return (this.shift << HighloadWalletV3QueryIdSequence.BIT_NUMBER_SIZE) | this.bitNumber;
